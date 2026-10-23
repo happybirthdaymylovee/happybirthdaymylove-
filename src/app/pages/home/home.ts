@@ -115,6 +115,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   readonly activeMemoryIndex = signal(0);
   readonly carouselProgressKey = signal(0);
   isMuted = false;
+  playbackBlocked = false;
   audioStatus = 'Starting background music…';
 
   private sectionObserver?: IntersectionObserver;
@@ -206,6 +207,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   toggleMute(): void {
     const audio = this.audioElement;
     if (!audio) return;
+
+    if (this.playbackBlocked) {
+      audio.volume = this.backgroundMusicVolume;
+      audio.muted = false;
+      void this.playActiveTrack();
+      return;
+    }
 
     if (!this.isMuted) {
       this.isMuted = true;
@@ -418,14 +426,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     try {
       await audio.play();
+      this.playbackBlocked = false;
       this.audioStatus = `Playing ${track.title}.`;
-    } catch {
+    } catch (error) {
       if (audio.error) {
         this.handleAudioError();
+      } else if (error instanceof DOMException && error.name === 'NotAllowedError') {
+        this.playbackBlocked = true;
+        this.audioStatus = 'Tap Play music to start playback.';
       } else {
-        this.isMuted = true;
-        audio.muted = true;
-        this.audioStatus = 'Playback was blocked. Use the sound button to try again.';
+        this.audioStatus = `Could not start ${track.title}. Use the sound button to try again.`;
       }
     }
   }

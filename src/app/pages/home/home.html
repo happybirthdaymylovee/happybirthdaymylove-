@@ -233,11 +233,11 @@
     class="audio-toggle"
     type="button"
     (click)="toggleMute()"
-    [attr.aria-label]="isMuted ? 'Unmute background music' : 'Mute background music'"
-    [attr.aria-pressed]="!isMuted"
+    [attr.aria-label]="playbackBlocked ? 'Play background music' : isMuted ? 'Unmute background music' : 'Mute background music'"
+    [attr.aria-pressed]="!isMuted && !playbackBlocked"
   >
     <span aria-hidden="true">{{ isMuted ? '♫' : '♪' }}</span>
-    {{ isMuted ? 'Unmute' : 'Mute' }}
+    {{ playbackBlocked ? 'Play music' : isMuted ? 'Unmute' : 'Mute' }}
   </button>
   <div class="volume-control" aria-label="Background music volume">
     <button

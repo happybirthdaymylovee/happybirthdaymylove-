@@ -38,6 +38,36 @@ describe('HomeComponent', () => {
     expect(component.backgroundMusicVolume).toBe(0.2);
   });
 
+  it('should keep music unmuted and offer a play action when autoplay is blocked', async () => {
+    const play = vi
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockRejectedValue(new DOMException('Autoplay is not allowed.', 'NotAllowedError'));
+
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(component.playbackBlocked).toBe(true));
+
+    expect(component.isMuted).toBe(false);
+    expect(fixture.nativeElement.querySelector('audio').muted).toBe(false);
+    play.mockRestore();
+  });
+
+  it('should retry unmuted playback from the play control after autoplay is blocked', async () => {
+    const play = vi
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockRejectedValueOnce(new DOMException('Autoplay is not allowed.', 'NotAllowedError'))
+      .mockResolvedValue(undefined);
+
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(component.playbackBlocked).toBe(true));
+    component.toggleMute();
+    await vi.waitFor(() => expect(component.playbackBlocked).toBe(false));
+
+    expect(play.mock.calls.length).toBeGreaterThanOrEqual(2);
+    expect(component.isMuted).toBe(false);
+    expect(fixture.nativeElement.querySelector('audio').muted).toBe(false);
+    play.mockRestore();
+  });
+
   it('should activate a section as soon as its navigation link is selected', () => {
     const section = document.createElement('section');
     section.id = 'moments';
