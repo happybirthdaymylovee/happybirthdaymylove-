@@ -662,6 +662,12 @@
 }
 
 @media (max-width: 700px) {
+  .birthday-section {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+
   .site-header {
     top: 12px;
     right: 10px;
@@ -714,17 +720,17 @@
     padding: 29px 25px;
   }
 
+  .letter-section {
+    padding-top: 90px;
+    padding-bottom: 72px;
+  }
+
   .letter-paragraph {
     font-size: 12px;
   }
 
   .moments-section {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .moments-content {
-    width: 100%;
+    padding: 90px 15px 72px;
   }
 
   .carousel-stage {
@@ -818,10 +824,7 @@
   .hero-portrait-frame,
   .hero-copy > *,
   .scroll-cue {
-    animation-name: hero-reduced-fade;
-    animation-duration: 500ms;
-    animation-timing-function: ease;
-    animation-fill-mode: both;
+    animation: hero-reduced-fade 500ms ease both;
   }
 
   @keyframes hero-reduced-fade {
