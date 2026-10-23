@@ -52,19 +52,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   readonly audioTracks: Record<BirthdaySectionId, AudioTrack> = {
     hero: {
-      src: '/assets/Happy%20Birthday%20Instrumental.mp3',
+      src: 'assets/Happy%20Birthday%20Instrumental.mp3',
       title: 'Elegant birthday instrumental',
     },
     letter: {
-      src: '/assets/Happy%20Birthday%20Instrumental.mp3',
+      src: 'assets/Happy%20Birthday%20Instrumental.mp3',
       title: 'Elegant birthday instrumental',
     },
     moments: {
-      src: '/assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
+      src: 'assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
       title: 'Paraluman (minus one) by Adie',
     },
     details: {
-      src: '/assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
+      src: 'assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
       title: 'Paraluman (minus one) by Adie',
     },
   };
@@ -85,7 +85,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   readonly memories: Memory[] = Array.from({ length: 35 }, (_, index) => index + 1)
     .filter((imageNumber) => imageNumber !== 25)
     .map((imageNumber) => ({
-      url: `/assets/${imageNumber}.jpg`,
+      url: `assets/${imageNumber}.jpg`,
       caption: 'A little moment worth keeping.',
       alt: `Memory ${imageNumber} from Ella's photo collection`,
       date: `MEMORY ${String(imageNumber).padStart(2, '0')}`,

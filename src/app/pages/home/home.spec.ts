@@ -23,11 +23,11 @@ describe('HomeComponent', () => {
   it('should use the birthday instrumental for the first two sections and Paraluman for the last two', () => {
     expect(component.audioTracks.letter).toEqual(component.audioTracks.hero);
     expect(component.audioTracks.hero).toMatchObject({
-      src: '/assets/Happy%20Birthday%20Instrumental.mp3',
+      src: 'assets/Happy%20Birthday%20Instrumental.mp3',
       title: 'Elegant birthday instrumental',
     });
     expect(component.audioTracks.moments).toMatchObject({
-      src: '/assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
+      src: 'assets/Paraluman%20-%20Adie%20%5BMinus%20One%5D%20HQ.mp3',
       title: 'Paraluman (minus one) by Adie',
     });
     expect(component.audioTracks.details).toEqual(component.audioTracks.moments);
@@ -93,7 +93,7 @@ describe('HomeComponent', () => {
 
     expect(component.memories).toHaveLength(34);
     expect(component.memories.map((memory) => memory.url)).toEqual(
-      imageNumbers.map((imageNumber) => `/assets/${imageNumber}.jpg`),
+      imageNumbers.map((imageNumber) => `assets/${imageNumber}.jpg`),
     );
     expect(component.carouselDelayMs).toBe(3000);
     expect(component.memories.every((memory) => memory.url && memory.caption && memory.alt)).toBe(
