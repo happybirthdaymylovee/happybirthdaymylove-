@@ -69,18 +69,16 @@ The hidden audio starts at 20% volume and is configured unmuted. The same song c
 
 The included GitHub Actions workflow builds and deploys the site whenever you push to `main` or `master`.
 
-1. Sign in to GitHub as **`happybirthdaymylove`** and create a repository named **`happybirthdaymylove.github.io`**. This exact owner and repository name are required for the site address `https://happybirthdaymylove.github.io/`.
-2. In the repository's **Settings → Pages**, set the build and deployment source to **GitHub Actions**.
-3. Connect this local project to the new repository and push the `main` branch:
+1. This project is in [`happybirthdaymylovee/happybirthdaymylove-`](https://github.com/happybirthdaymylovee/happybirthdaymylove-). In that repository, open **Settings → Pages** and set the build and deployment source to **GitHub Actions**.
+2. Push the `main` branch to trigger deployment:
 
    ```bash
-   git remote add origin https://github.com/happybirthdaymylove/happybirthdaymylove.github.io.git
-   git branch -M main
    git push -u origin main
    ```
 
-   If `origin` is already configured, update it with `git remote set-url origin https://github.com/happybirthdaymylove/happybirthdaymylove.github.io.git` instead of adding it again.
-4. In the repository's **Actions** tab, wait for **Deploy to GitHub Pages** to finish. The site will then be available at `https://happybirthdaymylove.github.io/`.
+3. In the repository's **Actions** tab, wait for **Deploy to GitHub Pages** to finish. The project site will be available at `https://happybirthdaymylovee.github.io/happybirthdaymylove-/`.
+
+Because this repository is named `happybirthdaymylove-` rather than `happybirthdaymylovee.github.io`, GitHub Pages uses the project URL above. To use the shorter `https://happybirthdaymylovee.github.io/` address, the repository would need to be named `happybirthdaymylovee.github.io`.
 
 The photos, letter, and audio files in this repository will be publicly accessible when the site is published. Make sure you have permission to share them publicly.
 
