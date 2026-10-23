@@ -1,0 +1,266 @@
+<header class="site-header">
+  <nav class="navigation" aria-label="Main navigation">
+    <a
+      href="#hero"
+      [class.active]="activeSection === 'hero'"
+      [attr.aria-current]="activeSection === 'hero' ? 'location' : null"
+      (click)="scrollToSection($event, 'hero')"
+      >Ella's {{ ageLabel(birthdayCountdown().age) }}</a
+    >
+    <a
+      href="#letter"
+      [class.active]="activeSection === 'letter'"
+      [attr.aria-current]="activeSection === 'letter' ? 'location' : null"
+      (click)="scrollToSection($event, 'letter')"
+      >The Letter</a
+    >
+    <a
+      href="#moments"
+      [class.active]="activeSection === 'moments'"
+      [attr.aria-current]="activeSection === 'moments' ? 'location' : null"
+      (click)="scrollToSection($event, 'moments')"
+      >Our Moments</a
+    >
+    <a
+      href="#details"
+      [class.active]="activeSection === 'details'"
+      [attr.aria-current]="activeSection === 'details' ? 'location' : null"
+      (click)="scrollToSection($event, 'details')"
+      >The Little Things</a
+    >
+  </nav>
+</header>
+
+<main class="birthday-page">
+  <section
+    #pageSection
+    class="birthday-section hero-section"
+    id="hero"
+    data-section="hero"
+    aria-labelledby="hero-title"
+  >
+    <div class="hero-content">
+      <div class="hero-portrait-frame">
+        <img class="hero-portrait" src="/assets/main.jpg" alt="Ella enjoying a sunny day at the beach" />
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">A day for celebrating you</p>
+        <h1 id="hero-title">Happy {{ ageLabel(birthdayCountdown().age) }} Birthday, My Love</h1>
+        <span class="hero-rule" aria-hidden="true"></span>
+        <p class="hero-subtitle">
+          Here’s to everything you are, and all the lovely things still to come.
+        </p>
+      </div>
+      <a
+        class="scroll-cue"
+        href="#letter"
+        aria-label="Scroll down to the letter"
+        (click)="scrollToSection($event, 'letter')"
+      >
+        <span>SCROLL TO YOUR LETTER</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </section>
+
+  <section
+    #pageSection
+    class="birthday-section letter-section"
+    id="letter"
+    data-section="letter"
+    aria-labelledby="letter-title"
+  >
+    <article class="letter-card">
+      <p class="eyebrow">A few words, from me to you</p>
+      <h2 id="letter-title">To my favorite person</h2>
+      <p class="letter-greeting">My love,</p>
+      <p class="letter-paragraph">
+        Happy Birthday! I hope this gift that I did will make you happy and smile.
+        {{ birthdayCountdown().age }} years of your life and andyan na ako for
+        {{ relationshipYears() }} years and more!
+        Being with you gaves me such joy and I cannot thank you enough for being with me all these
+        years.
+      </p>
+      @for (paragraph of letterParagraphs; track paragraph) {
+        <p class="letter-paragraph">{{ paragraph }}</p>
+      }
+      <p class="letter-signoff">All my love, always in all ways.</p>
+      <span class="letter-heart" aria-hidden="true">N</span>
+    </article>
+    <p class="section-index">02 <span>/</span> THE LETTER</p>
+  </section>
+
+  <section
+    #pageSection
+    class="birthday-section moments-section"
+    id="moments"
+    data-section="moments"
+    aria-labelledby="moments-title"
+  >
+    <div class="moments-content">
+      <div class="section-heading">
+        <p class="eyebrow">A few favorite chapters</p>
+        <h2 id="moments-title">Our Moments</h2>
+        <p class="section-description">Little snapshots of a story I’m so glad we get to share.</p>
+      </div>
+      <div class="carousel" aria-roledescription="carousel" aria-label="Our favorite memories">
+        <div class="carousel-stage">
+          @for (memory of memories; track memory.date; let memoryIndex = $index) {
+            @let offset = getMemoryOffset(memoryIndex);
+            <button
+              class="carousel-card"
+              [class.is-active]="offset === 0"
+              [class.is-near]="isNearCarouselSlide(offset)"
+              [class.is-far]="isFarCarouselSlide(offset)"
+              [class.is-hidden]="!isVisibleCarouselSlide(offset)"
+              [style.left.%]="getCarouselLeftPercent(offset)"
+              [style.transform]="getCarouselTransform(offset)"
+              [style.zIndex]="getCarouselZIndex(offset)"
+              type="button"
+              [attr.aria-label]="'Show memory ' + (memoryIndex + 1) + ': ' + memory.date"
+              [attr.aria-pressed]="offset === 0"
+              [attr.aria-hidden]="!isVisibleCarouselSlide(offset) ? 'true' : null"
+              [attr.tabindex]="isVisibleCarouselSlide(offset) ? 0 : -1"
+              (click)="selectMemory(memoryIndex)"
+            >
+              <img [src]="memory.url" [alt]="memory.alt" loading="lazy" />
+            </button>
+          }
+        </div>
+        <div class="carousel-caption" aria-live="polite">
+          <p class="memory-date">
+            {{ memories[activeMemoryIndex()].date }} ·
+            {{ formatTwoDigits(activeMemoryIndex() + 1) }} / {{ formatTwoDigits(memories.length) }}
+          </p>
+          <p class="memory-caption">{{ memories[activeMemoryIndex()].caption }}</p>
+        </div>
+        <div class="carousel-controls">
+          <button
+            class="carousel-arrow"
+            type="button"
+            aria-label="Previous memory"
+            (click)="showPreviousMemory()"
+          >
+            ←
+          </button>
+          <div class="carousel-counter" aria-label="Current memory">
+            {{ formatTwoDigits(activeMemoryIndex() + 1) }} / {{ formatTwoDigits(memories.length) }}
+          </div>
+          <button
+            class="carousel-arrow"
+            type="button"
+            aria-label="Next memory"
+            (click)="showNextMemory()"
+          >
+            →
+          </button>
+        </div>
+        <div class="carousel-progress" aria-hidden="true">
+          @for (cycle of [carouselProgressKey()]; track cycle) {
+            <span
+              class="carousel-progress-fill"
+              [style.--progress-duration]="carouselDelayMs + 'ms'"
+            ></span>
+          }
+        </div>
+      </div>
+    </div>
+    <p class="section-index">03 <span>/</span> OUR MOMENTS</p>
+  </section>
+
+  <section
+    #pageSection
+    class="birthday-section details-section"
+    id="details"
+    data-section="details"
+    aria-labelledby="details-title"
+  >
+    <div class="details-layout">
+      <div class="details-content">
+        <p class="eyebrow">The little details I adore</p>
+        <h2 id="details-title">The Little Things</h2>
+        <p class="section-description">
+          The big moments are wonderful. It’s the everyday you that I love most. And a reminder that I remember all the little things that make you, you.
+        </p>
+        <div class="favorites-list">
+          @for (favorite of favorites; track favorite.label; let i = $index) {
+            <article class="favorite-item">
+              <span class="favorite-number">0{{ i + 1 }}</span>
+              <h3>{{ favorite.label }}</h3>
+              <p>{{ favorite.value }}</p>
+            </article>
+          }
+        </div>
+        <p class="birthday-signoff">
+          Here’s to {{ birthdayCountdown().age }}, Ella. <span>With love, always.</span>
+        </p>
+      </div>
+
+      <aside class="birthday-countdown" aria-labelledby="countdown-title">
+        <p class="eyebrow">A little something to look forward to</p>
+        <h3 id="countdown-title">Your next birthday</h3>
+        <p class="countdown-date">{{ birthdayDateLabel }}</p>
+        <p class="countdown-turning">
+          Turning <span>{{ ageLabel(birthdayCountdown().nextBirthdayAge) }}</span>
+        </p>
+        <div class="countdown-units" aria-label="Time remaining">
+          <div class="countdown-unit">
+            <span>{{ birthdayCountdown().days }}</span>
+            <small>Days</small>
+          </div>
+          <div class="countdown-unit">
+            <span>{{ formatTwoDigits(birthdayCountdown().hours) }}</span>
+            <small>Hours</small>
+          </div>
+          <div class="countdown-unit">
+            <span>{{ formatTwoDigits(birthdayCountdown().minutes) }}</span>
+            <small>Minutes</small>
+          </div>
+          <div class="countdown-unit">
+            <span>{{ formatTwoDigits(birthdayCountdown().seconds) }}</span>
+            <small>Seconds</small>
+          </div>
+        </div>
+        <p class="countdown-note">Counting down to another year of wonderful you.</p>
+      </aside>
+    </div>
+    <p class="section-index">04 <span>/</span> THE LITTLE THINGS</p>
+  </section>
+</main>
+
+<aside class="audio-control" aria-label="Background music controls">
+  <button
+    class="audio-toggle"
+    type="button"
+    (click)="toggleMute()"
+    [attr.aria-label]="isMuted ? 'Unmute background music' : 'Mute background music'"
+    [attr.aria-pressed]="!isMuted"
+  >
+    <span aria-hidden="true">{{ isMuted ? '♫' : '♪' }}</span>
+    {{ isMuted ? 'Unmute' : 'Mute' }}
+  </button>
+  <div class="volume-control" aria-label="Background music volume">
+    <button
+      class="volume-step"
+      type="button"
+      aria-label="Decrease volume by 20 percent"
+      [disabled]="volumePercent === 0"
+      (click)="changeVolume(-1)"
+    >
+      −
+    </button>
+    <output class="volume-value">{{ volumePercent }}%</output>
+    <button
+      class="volume-step"
+      type="button"
+      aria-label="Increase volume by 20 percent"
+      [disabled]="volumePercent === 100"
+      (click)="changeVolume(1)"
+    >
+      +
+    </button>
+  </div>
+  <p class="audio-status" aria-live="polite">{{ audioStatus }}</p>
+</aside>
+
+<audio #audioPlayer hidden preload="auto" loop (error)="handleAudioError()"></audio>
